@@ -1,0 +1,19 @@
+// LEXICON: Generated file
+// Project: ${project}
+// Subproject: ${subproject}
+// MODULE ${name}
+// Type: TEST BENCH FILE
+
+// TIMESCALE: <time_unit>/<time_precision>
+`timescale 1ps/1ps
+
+module ${name}_tb;
+    // -- ADD REGISTERS AND WIRES HERE
+
+    initial begin
+        $$dumpfile("${wave}");
+        // use $$dumpvars(level, variables ...) function for viewing its waveforms.
+
+    end
+    
+endmodule

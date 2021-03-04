@@ -1,0 +1,15 @@
+// LEXICON: Generated file
+// Project: ${project}
+// Subproject: ${subproject}
+// MODULE ${name}
+// Type: MODULE FILE
+
+// TIMESCALE: <time_unit>/<time_precision>
+`timescale 1ps/1ps
+
+module ${name}_mod(
+        // port lists for the module
+);
+    // -- BODY OF MODULE
+
+endmodule

@@ -1,0 +1,14 @@
+Author: gouthamkrishnakv
+Modules:
+  not:
+    build_command: not
+    clean_command: not_clean
+    exec: not.vvp
+    exec_var: NOT_EXEC
+    files: []
+    files_var: NOT_FILES
+    timeout: 10
+    wave: not.vcd
+    wave_var: NOT_WAVE
+Name: a01q01
+Parent: assignment_01
