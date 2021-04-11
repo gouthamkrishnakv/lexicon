@@ -317,4 +317,4 @@ class Project:
                         project_config.author = author
                     is_modified = True
 # manage the project
-Project.cli_manage()
+# Project.cli_manage()

@@ -10,8 +10,6 @@ import yaml
 from yaml.error import YAMLError
 
 from commonutils import CLI_VARS_PRETTYPRINT, change_text, check_is_modified
-
-from module import Module
 from makegenerators import (
     append_lines,
     gen_makefile_module_cmd,
@@ -19,6 +17,8 @@ from makegenerators import (
     PHONY_BUILD_ALL,
     PHONY_CLEAN_ALL,
 )
+
+from module import Module
 
 
 class Subproject:
@@ -35,8 +35,8 @@ class Subproject:
     AUTHOR = "Author"
     MODULES = "Modules"
     # - FILENAME
-    LEXICON_SUB_FILE = "lexicon_sub.yaml"
-    LEXICON_SUB_FILE_BACKUP = "." + LEXICON_SUB_FILE + ".bkp"
+    SUBPROJECT_FILE = "lexicon_sub.yaml"
+    LEXICON_SUB_FILE_BACKUP = "." + SUBPROJECT_FILE + ".bkp"
 
     def __init__(self, args: Dict[str, Any]) -> None:
         # TODO: Argument Validation
@@ -67,7 +67,7 @@ class Subproject:
 
     def save_config(self, disable_replace = False):
         backup_path = os.path.join(os.getcwd(), Subproject.LEXICON_SUB_FILE_BACKUP)
-        subproject_path = os.path.join(os.getcwd(), Subproject.LEXICON_SUB_FILE)
+        subproject_path = os.path.join(os.getcwd(), Subproject.SUBPROJECT_FILE)
         # Backup not implemented, unreachable code for now
         if not disable_replace:
             os.replace(subproject_path, backup_path)
@@ -76,7 +76,7 @@ class Subproject:
 
     def restore_config():
         backup_path = os.path.join(os.getcwd(), Subproject.LEXICON_SUB_FILE_BACKUP)
-        lexicon_path = os.path.join(os.getcwd(), Subproject.LEXICON_SUB_FILE)
+        lexicon_path = os.path.join(os.getcwd(), Subproject.SUBPROJECT_FILE)
         if os.path.exists(backup_path):
             os.replace(backup_path, lexicon_path)
 
@@ -206,7 +206,7 @@ class Subproject:
     @staticmethod
     def cli_manage():
         # root prompt for 'Subproject'
-        sub_filepath = os.path.join(os.getcwd(), Subproject.LEXICON_SUB_FILE)
+        sub_filepath = os.path.join(os.getcwd(), Subproject.SUBPROJECT_FILE)
         if not os.path.exists(sub_filepath):
             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), sub_filepath)
         try:
