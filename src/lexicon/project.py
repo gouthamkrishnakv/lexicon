@@ -121,7 +121,7 @@ class Project:
                     else:
                         break
                 else:
-                    while inquirer.confirm("Do you want to create more projects?"):
+                    if inquirer.confirm("Do you want to create more subprojects?"):
                         spname = inquirer.prompt([spcreateprompt])['name']
                         if inquirer.confirm(
                             f"Do you want to continue creating {spname}?"
@@ -133,9 +133,12 @@ class Project:
                                 answer['name'],
                                 author.name
                             )
+                    else:
+                        break
+                        
             # return the generated project
             try:
-                project_config = Project({Project.AUTHOR: author.to_dict(), Project.NAME: spname, Project.TYPE_OF_PROJECT: answer['type'].lower(), })
+                project_config = Project({Project.AUTHOR: author.to_dict(), Project.NAME: spname, Project.TYPE_OF_PROJECT: answer['type'].lower(), Project.SUBPROJECTS: subprojects})
                 with open(os.path.join(os.getcwd(), Project.PROJECT_FILE), 'w') as project_out:
                     project_out.write(project_config.to_yaml())
                     print("Project configuration written")
