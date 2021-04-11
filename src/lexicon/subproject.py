@@ -8,6 +8,7 @@ import pathlib
 from typing import Any, Dict, List
 import yaml
 from yaml.error import YAMLError
+
 from commonutils import CLI_VARS_PRETTYPRINT, change_text, check_is_modified
 
 from module import Module
