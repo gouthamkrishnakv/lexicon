@@ -37,10 +37,10 @@ class Subproject:
     LEXICON_SUB_FILE = "lexicon_sub.yaml"
     LEXICON_SUB_FILE_BACKUP = "." + LEXICON_SUB_FILE + ".bkp"
 
-    def __init__(self, args: Dict[str, Any]):
+    def __init__(self, args: Dict[str, Any]) -> None:
         # TODO: Argument Validation
         self.name = args[Subproject.NAME].strip()
-        self.parent = args[Subproject.PARENT]
+        self.parent = args[Subproject.PARENT].strip()
         self.author = args[Subproject.AUTHOR]
         self.modules = []
         modules = args[Subproject.MODULES]
@@ -66,10 +66,11 @@ class Subproject:
 
     def save_config(self, disable_replace = False):
         backup_path = os.path.join(os.getcwd(), Subproject.LEXICON_SUB_FILE_BACKUP)
-        lexicon_path = os.path.join(os.getcwd(), Subproject.LEXICON_SUB_FILE)
+        subproject_path = os.path.join(os.getcwd(), Subproject.LEXICON_SUB_FILE)
+        # Backup not implemented, unreachable code for now
         if not disable_replace:
-            os.replace(lexicon_path, backup_path)
-        with open(lexicon_path, "w") as new_config_file:
+            os.replace(subproject_path, backup_path)
+        with open(subproject_path, "w") as new_config_file:
             yaml.safe_dump(self.to_dict(), new_config_file)
 
     def restore_config():
@@ -178,12 +179,13 @@ class Subproject:
         if os.path.exists(os.path.join(os.getcwd(), "lexicon.yaml")) or not is_check_needed:
             # we are in a project directory
             try:
+                ans = None
                 # change to the subproject directory
                 os.chdir(os.path.join(os.getcwd(), subproject_name))
                 # if the subproject file exists
                 if os.path.exists(os.path.join(os.getcwd(), "lexicon_sub.yaml")):
                     # manage the project
-                    Module.cli_manage()
+                    ans = Subproject.cli_manage()
                     # get back to the project directory
                 else:
                     # error that the subproject file can't be found
@@ -192,6 +194,7 @@ class Subproject:
                 # TODO: USE FIND AND REIMPLEMENT ALL PLACES OF PATH MANIPULATION USING PATHLIB
                 os.chdir(pathlib.Path(*pathlib.Path(os.getcwd()).parts[:-1]))
                 print(os.getcwd())
+                return ans
             except OSError as ose:
                 raise ose
 
@@ -212,19 +215,21 @@ class Subproject:
             is_modified = False
             # CLI Loop
             while True:
+                # ROOT PROMPT
                 root_prompt = inquirer.List(
                     Subproject.CHOICE,
                     message=f"Manage {colorama.Fore.YELLOW}Subproject {colorama.Fore.BLUE}{subproject_config.name} {check_is_modified(is_modified,f'{colorama.Fore.GREEN}<modified>')}{colorama.Fore.RESET}",
                     choices=["Modify Properties", "Manage Modules", "Verify", "Reset", "Generate Makefile", "Exit"]
                 )
                 choice = inquirer.prompt([root_prompt])[Module.CHOICE]
+                # ALL CHOICES ARE SELECTED HERE
                 # If we're exiting it, make sure we do it properly.
                 if choice == "Exit":
                     if is_modified:
-                        modify_write = inquirer.confirm("Module has been changed. Do you want to save changes?")
+                        modify_write = inquirer.confirm("Subproject has been changed. Do you want to save changes?")
                         if modify_write:
                             subproject_config.save_config()
-                    break
+                    return is_modified
                 elif choice == "Generate Makefile":
                     # THESE ARE THE SUBROUTINES NECESSARY TO GENERATE MAKEFILES PROPERLY
                     makefile_path = os.path.join(os.path.dirname(sub_filepath), "Makefile")
@@ -264,6 +269,7 @@ class Subproject:
                         elif module_choice == "Create a module":
                             module = Module.generate_module(subproject_config.name, subproject_config.parent)
                             subproject_config.modules.append(module)
+                            is_modified = True
                         else:
                             selected_module: Module = module_map[module_choice]
                             selected_module_index = None

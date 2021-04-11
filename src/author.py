@@ -4,8 +4,8 @@ import inquirer
 
 # author type
 class AuthorType(Enum):
-    STUDENT = "Student"
-    FACULTY = "Faculty"
+    STUDENT = "student"
+    FACULTY = "faculty"
     # GROUP = "Group"
 
 
@@ -31,7 +31,7 @@ class Author:
     def to_dict(self):
         return {
             Author.NAME: self.name,
-            Author.TYPE: self.type.name
+            Author.TYPE: AuthorType(self.type).value
         }
 
     # create an author object
@@ -40,7 +40,7 @@ class Author:
         author_query = inquirer.List(
             'author_type',
             'Select the type of author you want',
-            list(map(lambda x: str(x)[11:], list(AuthorType)))
+            [atype.value for atype in AuthorType]
         )
         author_name = inquirer.Text(
             'author_name',
@@ -50,7 +50,7 @@ class Author:
         try:
             return Author(
                 AuthorType(
-                    answer['author_type'].capitalize()
+                    answer['author_type']
                 ),
                 answer['author_name']
             )
