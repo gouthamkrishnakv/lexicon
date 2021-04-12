@@ -8,12 +8,13 @@ import inquirer
 import os
 from typing import Dict, List, Any, Type
 import yaml
-from commonutils import CLI_VARS_PRETTYPRINT, change_text, check_is_modified
 
 
-from author import Author, AuthorType
-from commonutils import check_is_modified
-from subproject import Subproject
+from lexicon.commonutils import CLI_VARS_PRETTYPRINT, change_text, check_is_modified
+
+from lexicon.author import Author, AuthorType
+from lexicon.commonutils import check_is_modified
+from lexicon.subproject import Subproject
 
 class ProjectType(Enum):
     ASSIGNMENT = "assignment"

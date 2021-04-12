@@ -7,13 +7,13 @@ from typing import Any, Dict, List, Tuple
 import yaml
 
 
-from commonutils import (
+from lexicon.commonutils import (
     change_text,
     check_is_modified,
     CLI_VARS_PRETTYPRINT
 )
-from filegenerators import generate_quickstart_template
-from makegenerators import (
+from lexicon.filegenerators import generate_quickstart_template
+from lexicon.makegenerators import (
     COMPILE_COMMAND,
     CLEAN_COMMAND,
     VIEWER_COMMAND,
@@ -114,7 +114,10 @@ class Module:
             self.files = tempfiles
         # files_var
         if Module.FILES_VAR in args:
-            assert (type(args[Module.FILES_VAR]) == str), Module.STR_ERR.format(Module.FILES_VAR, self.name)
+            if type(args[Module.FILES_VAR]) != str:
+                raise ValueError(Module.STR_ERR.format(Module.files_var, self.files_var))
+            if " " in args[Module.FILES_VAR]:
+                raise ValueError(Module.FILENAME_ERR.format(args[Module.FILES_VAR], Module.files_var))
             assert (" " not in args[Module.FILES_VAR]), Module.FILENAME_ERR.format(args[Module.FILES_VAR], Module.FILES_VAR, self.name)
             self.files_var = args[Module.FILES_VAR]
         else:

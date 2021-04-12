@@ -1,7 +1,9 @@
 # created by virtualenv automatically
 bin/
-lib/
-src/__pycache__/*
-lib64/
-.vscode/
+build/
 examples/
+dist/
+lib/
+lib64/
+src/__pycache__/*
+.vscode/

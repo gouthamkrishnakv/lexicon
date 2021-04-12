@@ -9,8 +9,8 @@ from typing import Any, Dict, List
 import yaml
 from yaml.error import YAMLError
 
-from commonutils import CLI_VARS_PRETTYPRINT, change_text, check_is_modified
-from makegenerators import (
+from lexicon.commonutils import CLI_VARS_PRETTYPRINT, change_text, check_is_modified
+from lexicon.makegenerators import (
     append_lines,
     gen_makefile_module_cmd,
     MAKEFILE_PHONY,
@@ -18,7 +18,7 @@ from makegenerators import (
     PHONY_CLEAN_ALL,
 )
 
-from module import Module
+from lexicon.module import Module
 
 
 class Subproject:
