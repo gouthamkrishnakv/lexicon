@@ -1,14 +1,16 @@
 # Installation
 
-`Lexicon` needs **GNU Make** (`make`), **Icarus Verilog** (`iverilog`) and **GTKWave** (`gtkwave`) to run, so it's always better to install these, before you start with
+`Lexicon` needs **GNU Make** (`make`), **Icarus Verilog** (`iverilog`) and **GTKWave** (`gtkwave`) to run, as the Generated Makefiles require the former to run. We'll install these first.
+
+Then we'll follow up with installing [`Lexicon`](#install-lexicon).
 
 ## Tools
 
 **NOTE**: If you're in **MacOS** or **Windows**, Make sure to install [Homebrew](https://brew.sh) (MacOS) or [Chocolatey](https://chocolatey.org) (Windows) before starting.
 
-- GNU Make (`make`)
+-   GNU Make (`make`)
 
-	A `Makefile` is output by the Lexicon, after importing settings from the configuration files. To compile & execute, one needs to have GNU Make Installed in their System.
+	A `Makefile` recipe is output by the Lexicon, after importing settings from the configuration files. [GNU Make](https://www.gnu.org/software/make/) runs this recipe to build modules.
 
 	- Debian-based Systems (Debian, Ubuntu, Pop!_OS, ElementaryOS etc.)
 
@@ -46,9 +48,9 @@
         choco install make -y
         ```
 
-- Icarus Verilog (`iverilog`)
+-   Icarus Verilog (`iverilog`)
 
-    Icarus Verilog (`iverilog`) is an open-source Verilog Compiler. It compiles a verilog program and executes the program, like it executes any other program.
+    [Icarus Verilog](https://iverilog.icarus.com/) (`iverilog`) is an open-source Verilog Compiler. It compiles a verilog program and executes the program, like it executes any other program.
 
     - Debian-based Systems (Debian, Ubuntu, Pop!_OS, ElementaryOS etc.)
 
@@ -84,9 +86,9 @@
 
         Icarus Verilog for Windows is available [here](https://bleyer.org/icarus/). Download and install the latest version (usually the first link).
 
-- GTKWave (`gtkwave`)
+-   GTKWave (`gtkwave`)
 
-    GTKWave (`gtkwave`) is an open-source waveform viewer. It's written using the GTK UI and can open `.vcd` files, which is used by Verilog to output variables.
+    [GTKWave](https://gtkwave.sourceforge.net/) (`gtkwave`) is an open-source waveform viewer. It's written using the GTK UI and can open `.vcd` files, which is used by Verilog to output variables.
 
     - Debian-based Systems (Debian, Ubuntu, Pop!_OS, ElementaryOS etc.)
 
