@@ -77,20 +77,16 @@ class Module:
 
     # --- METHODS ---
     # constructor for a specific module
-    def __init__(self, name: str, args: Dict[str,Any]) -> None:
-        # ALL ASSERTIONS IN THIS FILE ARE MEANT TO ENSURE PROPER MAKEFILE GENERATION
+    def __init__(self, name: str, args: Dict[str, Any]) -> None:
         # name
         name = name.strip()
         if " " in name:
             raise ValueError(f"Change the name of module '{name}' so it doesn't have any spaces in it.")
         if name != name.lower():
             raise ValueError(f"The module '{name}' must not contain capital letters. Change it.")
-        # ASSERTIONS ADDED FOR DEBUG
-        # assert(" " not in name), f"change the name of module '{name}' so it doesn't have any spaces in it."
-        # assert(name == name.lower()), f"the name of module '{name}' contains capital letters. Change it."
         self.name = name
         # files
-        if args == None:
+        if args is None:
             args = {}
         if Module.FILES in args:
             if args[Module.FILES] is None:
@@ -98,12 +94,9 @@ class Module:
             if type(args[Module.FILES]) != list:
                 print(args[Module.FILES])
                 raise ValueError(Module.FILE_ERR.format(Module.FILES, self.name))
-            # ASSERTIONS ADDED AT THE TIME OF DEBUG
-            # assert (type(args[Module.FILES]) == list or type(args[Module.FILES] == None)), Module.FILE_ERR.format(Module.FILES, self.name)
             for file in args[Module.FILES]:
                 if type(file) != str:
                     raise ValueError(f"invalid filename '{file}' for {self.name}")
-                # assert (type(file) == str), f"invalid filename '{file}' for {self.name}"
             self.files = args[Module.FILES]
         else:
             testbench_file: str = f"{self.name}_tb.v"
@@ -118,7 +111,7 @@ class Module:
                 raise ValueError(Module.STR_ERR.format(Module.files_var, self.files_var))
             if " " in args[Module.FILES_VAR]:
                 raise ValueError(Module.FILENAME_ERR.format(args[Module.FILES_VAR], Module.files_var))
-            assert (" " not in args[Module.FILES_VAR]), Module.FILENAME_ERR.format(args[Module.FILES_VAR], Module.FILES_VAR, self.name)
+            # assert (" " not in args[Module.FILES_VAR]), Module.FILENAME_ERR.format(args[Module.FILES_VAR], Module.FILES_VAR, self.name)
             self.files_var = args[Module.FILES_VAR]
         else:
             self.files_var = self.name.upper() + "_FILES"
