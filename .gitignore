@@ -1,4 +1,4 @@
-# created by virtualenv automatically
+# Ignore files that are remnants of builds or ones not needed in source code.
 __pycache__/*
 bin/
 build/
@@ -6,4 +6,8 @@ examples/
 dist/
 lib/
 lib64/
+share/
+target/
+venv/
+# Remove VSCode Settings Directory
 .vscode/
