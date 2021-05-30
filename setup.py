@@ -7,7 +7,7 @@ with open("docs/README.md", "r", encoding="utf-8") as readmefile:
 # Set up all things
 setuptools.setup(
     name = "lexicon-gauthamkrishna9991",
-    version = "0.1.0",
+    version = "0.1.1",
     author = "Goutham Krishna K V",
     author_email = "gauthamkrishna9991@live.com",
     description = "A Verilog Project Management Tool",
@@ -29,7 +29,6 @@ setuptools.setup(
         "blessed==1.17.6",
         "colorama==0.4.4",
         "inquirer==2.7.0",
-        "python-editor==1.0.4",
         "PyYAML==5.4.1",
         "readchar==2.0.1",
         "six==1.15.0",
