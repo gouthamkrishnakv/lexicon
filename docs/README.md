@@ -12,4 +12,4 @@ This documentation consists of different parts. To go to one click one of the fo
 
 Copyright (c) 2021 Goutham Krishna K V
 
-All rights reserved, as per defined by [MIT License](LICENSE)
+All rights reserved, as per defined by [MIT License](../LICENSE)
