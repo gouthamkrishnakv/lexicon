@@ -32,9 +32,9 @@ def remove_files_in_directory(files: List[str],extension: str = "*.v"):
             files.remove(file)
     return files
 
-#---------------------------------------------------------------------------------------
-#TODO: CHANGE ALL THE ASSERTIONS TO CONDITIONAL ValueError Exceptions.... DO NOT FORGET|
-#---------------------------------------------------------------------------------------
+# +------------------------------------------------------------------------+
+# |TODO: CHANGE ALL THE ASSERTIONS TO CONDITIONAL ValueError Exceptions....|
+# +------------------------------------------------------------------------+
 class Module:
     # --- CLASS MEMBERS (INSTANCE VARIABLES) ---
     # module name
@@ -143,7 +143,7 @@ class Module:
         # wave_var
         if Module.WAVE_VAR in args:
             assert (type(args[Module.WAVE_VAR]) == str), Module.STR_ERR.format(Module.WAVE_VAR, self.name)
-            self.wave_filevar =  args[Module.WAVE_VAR]
+            self.wave_filevar = args[Module.WAVE_VAR]
         else:
             self.wave_filevar = self.name.upper() + "_WAVE"
         # build command
@@ -308,7 +308,7 @@ class Module:
         project_name: str
     ) -> Tuple[bool, 'Module']:
         reset_module = copy.deepcopy(module)
-        is_modified = False   
+        is_modified = False
         if module.files == []:
             generate_res = inquirer.confirm("Module files are empty. Do you want to generate default module files?")
             if generate_res:
