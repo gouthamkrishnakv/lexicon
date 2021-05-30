@@ -7,6 +7,7 @@ from lexicon.subproject import Subproject
 PROJECT_PATH = os.path.join(os.getcwd(), Project.PROJECT_FILE)
 SUBPROJECT_PATH = os.path.join(os.getcwd(), Subproject.SUBPROJECT_FILE)
 
+
 def main():
     args = sys.argv
     if os.path.exists(SUBPROJECT_PATH):

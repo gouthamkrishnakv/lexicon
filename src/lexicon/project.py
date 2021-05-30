@@ -6,15 +6,17 @@ from enum import Enum
 import colorama
 import inquirer
 import os
-from typing import Dict, List, Any, Type
+from typing import Dict, List, Any
 import yaml
 
 
-from lexicon.commonutils import CLI_VARS_PRETTYPRINT, change_text, check_is_modified
+from lexicon.commonutils import (
+    CLI_VARS_PRETTYPRINT, change_text, check_is_modified
+)
 
 from lexicon.author import Author, AuthorType
-from lexicon.commonutils import check_is_modified
 from lexicon.subproject import Subproject
+
 
 class ProjectType(Enum):
     ASSIGNMENT = "assignment"
@@ -24,6 +26,7 @@ class ProjectType(Enum):
     FACULTY_COPY = "faculty copy"
     ANSWER_KEY = "answer key"
     OTHER = "other"
+
 
 class Project:
     # -- CLASS MEMBERS (INSTANCE VARIABLES) ---
@@ -55,12 +58,11 @@ class Project:
         author = args[Project.AUTHOR]
         self.author = Author(AuthorType(author[Author.TYPE].lower()), author[Author.NAME])
         self.subprojects = args[Project.SUBPROJECTS]
-        
 
     def to_dict(self):
         return {
             Project.NAME: self.name,
-            Project.TYPE_OF_PROJECT: ProjectType(self.type).value,
+            Project.TYPE_OF_PROJECT: self.type.value,
             Project.AUTHOR: self.author.to_dict(),
             Project.SUBPROJECTS: self.subprojects
         }
@@ -72,7 +74,6 @@ class Project:
         project_path = os.path.join(os.getcwd(), Project.PROJECT_FILE)
         with open(project_path, "w") as new_config_file:
             yaml.safe_dump(self.to_dict(), new_config_file)
-
 
     # --- CLI METHODS ---
     # generate projects
@@ -88,7 +89,7 @@ class Project:
                 inquirer.List(
                     'type',
                     'Enter the type of project',
-                    list(ProjectType)
+                    [e.value for e in ProjectType]
                 )
             ]
             # ask questions and get answers
@@ -130,16 +131,16 @@ class Project:
                             os.makedirs(os.path.join(os.getcwd(), spname))
                             subprojects.append(spname)
                             Subproject.generate_subproject(
-                                spname, 
+                                spname,
                                 answer['name'],
                                 author.name
                             )
                     else:
                         break
-                        
             # return the generated project
             try:
-                project_config = Project({Project.AUTHOR: author.to_dict(), Project.NAME: spname, Project.TYPE_OF_PROJECT: answer['type'].lower(), Project.SUBPROJECTS: subprojects})
+                project_config = Project({Project.AUTHOR: author.to_dict(), Project.NAME: spname, Project.TYPE_OF_PROJECT: answer['type'], Project.SUBPROJECTS: subprojects})
+                print(project_config.to_yaml())
                 with open(os.path.join(os.getcwd(), Project.PROJECT_FILE), 'w') as project_out:
                     project_out.write(project_config.to_yaml())
                     print("Project configuration written")
@@ -166,14 +167,14 @@ class Project:
             while True:
                 root_prompt = inquirer.List(
                     Project.CHOICE,
-                    message = f"Manage {colorama.Fore.YELLOW}Project {colorama.Fore.BLUE}{project_config.name} {check_is_modified(is_modified, f'{colorama.Fore.GREEN}<modified>')}{colorama.Fore.RESET}",
-                    choices = ["Manage Subprojects", "Modify Properties", "Reset", "View Configuration", "Exit"]
+                    message=f"Manage {colorama.Fore.YELLOW}Project {colorama.Fore.BLUE}{project_config.name} {check_is_modified(is_modified, f'{colorama.Fore.GREEN}<modified>')}{colorama.Fore.RESET}",
+                    choices=["Manage Subprojects", "Modify Properties", "Reset", "View Configuration", "Exit"]
                 )
                 try:
                     choice = inquirer.prompt([root_prompt])[Project.CHOICE]
                 except TypeError:
                     continue
-                if choice == None:
+                if choice is None:
                     continue
                 elif choice == "Exit":
                     if is_modified:
@@ -197,7 +198,7 @@ class Project:
                         subproject_prompt = inquirer.List(
                             'subproject_choice',
                             'Select Subproject to manage',
-                            choices = subproject_choices
+                            choices=subproject_choices
                         )
                         subproject_choice = inquirer.prompt([subproject_prompt])['subproject_choice']
                         if subproject_choice == "Exit":
@@ -210,7 +211,7 @@ class Project:
                                 'Enter the name for the subproject'
                             )
                             spname = inquirer.prompt([spcreateprompt])
-                            if spname != None:
+                            if spname is not None:
                                 spname = spname['subproject_name']
                                 if spname.strip() != "":
                                     os.makedirs(os.path.join(os.getcwd(), spname))
@@ -252,13 +253,13 @@ class Project:
                     choice_list = inquirer.List(
                         'project_key',
                         message='Select the property to modify',
-                        choices= list(keydictionary.keys())
+                        choices=list(keydictionary.keys())
                     )
                     try:
                         choice_property = keydictionary[inquirer.prompt([choice_list])['project_key']]
                     except TypeError:
                         continue
-                    if choice_property == None:
+                    if choice_property is None:
                         continue
                     elif choice_property == Project.NAME:
                         result, answer = change_text(choice_property, project_dict[choice_property])
@@ -271,8 +272,8 @@ class Project:
                         type_choices_prompt = inquirer.List(
                             'project_type',
                             'Select the property type you want to switch to',
-                            choices = [ptype.value for ptype in ProjectType],
-                            default = project_config.type
+                            choices=[ptype.value for ptype in ProjectType],
+                            default=project_config.type
                         )
                         try:
                             ptype_choice = inquirer.prompt([type_choices_prompt])['project_type']
@@ -281,6 +282,9 @@ class Project:
                         except TypeError:
                             continue
                     elif choice_property == Project.AUTHOR:
+                        # This is a difficult part of code, there's multiple exchange of
+                        # key-value pairs, make sure to print 'keydictionary' and understand
+                        # how it works.
                         author = project_config.author
                         author_dict = author.to_dict()
                         keydictionary = {}
@@ -290,7 +294,7 @@ class Project:
                         author_choices_prompt = inquirer.List(
                             'author_prop',
                             'Select the property to modify',
-                            choices = list(keydictionary.keys())
+                            choices=list(keydictionary.keys())
                         )
                         answer = None
                         try:
@@ -298,7 +302,7 @@ class Project:
                         except KeyError:
                             continue
                         print(answer)
-                        if answer == None:
+                        if answer is None:
                             continue
                         elif answer == Author.NAME:
                             result, answer = change_text(answer, author_dict[answer])
@@ -308,7 +312,7 @@ class Project:
                             author_type_choices = inquirer.List(
                                 'author_type',
                                 'Select the type of author to be changed to',
-                                choices= [atype.value for atype in AuthorType]
+                                choices=[atype.value for atype in AuthorType]
                             )
                             try:
                                 new_author_type = AuthorType(inquirer.prompt([author_type_choices])['author_type'])
@@ -317,5 +321,18 @@ class Project:
                             author.type = new_author_type
                         project_config.author = author
                     is_modified = True
+                elif choice == "View Configuration":
+                    print(
+                        f"{colorama.Fore.YELLOW}"
+                        f"Configuration from "
+                        f"{colorama.Fore.GREEN}{project_path}{colorama.Fore.RESET}"
+                    )
+                    print(
+                        f"{colorama.Fore.BLUE}-- START OF CONFIGURATION --{colorama.Fore.RESET}"
+                    )
+                    print(project_config.to_yaml())
+                    print(
+                        f"{colorama.Fore.BLUE}-- END OF CONFIGURATION --{colorama.Fore.RESET}"
+                    )
 # manage the project
 # Project.cli_manage()
