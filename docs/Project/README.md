@@ -1,24 +1,20 @@
 # Lexicon Project Specification
 
-### The project consists of 2 parts:
+This is a single instance of a project which holds all information relevant to the project in a single file.
 
-- `Project`
+This consists of the following
 
-    This is a single instance of a project which holds all information relevant to the project in a single file.
+- [`Subprojects`](SUBPROJECTS.md)
 
-    This consists of the following
+    This holds the subprojects of a single project. A project can consist of zero or more subprojects, depending on what the use-case is.
 
-    - [`Subprojects`](SUBPROJECTS.md)
-    
-        This holds the subprojects of a single project. A project can consist of zero or more subprojects, depending on what the use-case is.
+- [`Configuration`](PROJECT.md)
 
-    - [`Configuration`](PROJECT.md)
+    This holds the configurations of the project used.
 
-        This holds the configurations of the project used.
+- [`Logs`](LOGS.md) (**NOT COMPLETED**)
 
-    - [`Logs`](LOGS.md) (**NOT COMPLETED**)
-
-        This holds the logs of the project, if that is needed for either debugging the project or to check whether there was any malpractice, if needed.
+    This holds the logs of the project, if that is needed for either debugging the project or to check whether there was any malpractice, if needed.
 
 - `Author` or `Authors`
 

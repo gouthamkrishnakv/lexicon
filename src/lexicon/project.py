@@ -10,9 +10,7 @@ from typing import Dict, List, Any
 import yaml
 
 
-from lexicon.commonutils import (
-    CLI_VARS_PRETTYPRINT, change_text, check_is_modified
-)
+from lexicon.commonutils import CLI_VARS_PRETTYPRINT, change_text, check_is_modified
 
 from lexicon.author import Author, AuthorType
 from lexicon.subproject import Subproject
@@ -64,7 +62,7 @@ class Project:
             Project.NAME: self.name,
             Project.TYPE_OF_PROJECT: self.type.value,
             Project.AUTHOR: self.author.to_dict(),
-            Project.SUBPROJECTS: self.subprojects
+            Project.SUBPROJECTS: self.subprojects,
         }
 
     def to_yaml(self):
@@ -82,15 +80,8 @@ class Project:
         if do_create:
             # questions to prompt the user
             project_queries = [
-                inquirer.Text(
-                    'name',
-                    'Enter the name of the project'
-                ),
-                inquirer.List(
-                    'type',
-                    'Enter the type of project',
-                    [e.value for e in ProjectType]
-                )
+                inquirer.Text("name", "Enter the name of the project"),
+                inquirer.List("type", "Enter the type of project", [e.value for e in ProjectType]),
             ]
             # ask questions and get answers
             answer = inquirer.prompt(project_queries)
@@ -98,50 +89,42 @@ class Project:
             author: Author = Author.create_author()
             # subprojects list, which is empty presently
             subprojects = []
-            spcreateprompt = inquirer.Text(
-                'name',
-                'Enter the name of the new subproject'
-            )
+            spcreateprompt = inquirer.Text("name", "Enter the name of the new subproject")
             # add any generated projects here, for each generated project, create
             # an empty directory also
             while True:
                 if subprojects == []:
                     if inquirer.confirm("No subprojects created. Create one?"):
-                        spname = inquirer.prompt([spcreateprompt])['name']
-                        if inquirer.confirm(
-                            f"Do you want to continue creating '{spname}'?"
-                        ):
+                        spname = inquirer.prompt([spcreateprompt])["name"]
+                        if inquirer.confirm(f"Do you want to continue creating '{spname}'?"):
                             sp_pathname = os.path.join(os.getcwd(), spname)
                             if not os.path.exists(sp_pathname):
                                 os.makedirs(spname)
                             subprojects.append(spname)
-                            Subproject.generate_subproject(
-                                spname,
-                                answer['name'],
-                                author.name
-                            )
+                            Subproject.generate_subproject(spname, answer["name"], author.name)
                     else:
                         break
                 else:
                     if inquirer.confirm("Do you want to create more subprojects?"):
-                        spname = inquirer.prompt([spcreateprompt])['name']
-                        if inquirer.confirm(
-                            f"Do you want to continue creating {spname}?"
-                        ):
+                        spname = inquirer.prompt([spcreateprompt])["name"]
+                        if inquirer.confirm(f"Do you want to continue creating {spname}?"):
                             os.makedirs(os.path.join(os.getcwd(), spname))
                             subprojects.append(spname)
-                            Subproject.generate_subproject(
-                                spname,
-                                answer['name'],
-                                author.name
-                            )
+                            Subproject.generate_subproject(spname, answer["name"], author.name)
                     else:
                         break
             # return the generated project
             try:
-                project_config = Project({Project.AUTHOR: author.to_dict(), Project.NAME: spname, Project.TYPE_OF_PROJECT: answer['type'], Project.SUBPROJECTS: subprojects})
+                project_config = Project(
+                    {
+                        Project.AUTHOR: author.to_dict(),
+                        Project.NAME: spname,
+                        Project.TYPE_OF_PROJECT: answer["type"],
+                        Project.SUBPROJECTS: subprojects,
+                    }
+                )
                 print(project_config.to_yaml())
-                with open(os.path.join(os.getcwd(), Project.PROJECT_FILE), 'w') as project_out:
+                with open(os.path.join(os.getcwd(), Project.PROJECT_FILE), "w") as project_out:
                     project_out.write(project_config.to_yaml())
                     print("Project configuration written")
             except TypeError as te:
@@ -159,7 +142,7 @@ class Project:
             Project.cli_generate()
         else:
             project_config = yaml.safe_load(open(project_path, "r"))
-            project_config: 'Project' = Project(project_config)
+            project_config: "Project" = Project(project_config)
             print(project_config.to_dict())
             current_config = deepcopy(project_config)
             is_modified = False
@@ -167,8 +150,18 @@ class Project:
             while True:
                 root_prompt = inquirer.List(
                     Project.CHOICE,
-                    message=f"Manage {colorama.Fore.YELLOW}Project {colorama.Fore.BLUE}{project_config.name} {check_is_modified(is_modified, f'{colorama.Fore.GREEN}<modified>')}{colorama.Fore.RESET}",
-                    choices=["Manage Subprojects", "Modify Properties", "Reset", "View Configuration", "Exit"]
+                    message=f"""Manage {
+                            colorama.Fore.YELLOW
+                        }Project {colorama.Fore.BLUE}{project_config.name} {
+                            check_is_modified(is_modified, f'{colorama.Fore.GREEN}<modified>')
+                        }{colorama.Fore.RESET}""",
+                    choices=[
+                        "Manage Subprojects",
+                        "Modify Properties",
+                        "Reset",
+                        "View Configuration",
+                        "Exit",
+                    ],
                 )
                 try:
                     choice = inquirer.prompt([root_prompt])[Project.CHOICE]
@@ -178,12 +171,20 @@ class Project:
                     continue
                 elif choice == "Exit":
                     if is_modified:
-                        modify_write = inquirer.confirm("Project has been modified. Do you want to save changes?")
+                        modify_write = inquirer.confirm(
+                            "Project has been modified. Do you want to save changes?"
+                        )
                         print(f"UMODIFIED:{current_config.to_dict()}")
                         print(f"MODIFIED: {project_config.to_dict()}")
                         if modify_write:
                             project_config.save_config()
-                            print(f"{colorama.Fore.GREEN} Configuration file saved in filepath {colorama.Fore.YELLOW}{os.path.join(os.getcwd(), Project.PROJECT_FILE)}{colorama.Fore.RESET} .")
+                            print(
+                                f"""{
+                                    colorama.Fore.GREEN
+                                } Configuration file saved in filepath {colorama.Fore.YELLOW}{
+                                    os.path.join(os.getcwd(), Project.PROJECT_FILE)
+                                }{colorama.Fore.RESET} ."""
+                            )
                     break
                 elif choice == "Reset":
                     project_config = deepcopy(current_config)
@@ -193,51 +194,70 @@ class Project:
                     while True:
                         subproject_choices = list(project_config.subprojects) + [
                             "Create a subproject",
-                            "Exit"
+                            "Exit",
                         ]
                         subproject_prompt = inquirer.List(
-                            'subproject_choice',
-                            'Select Subproject to manage',
-                            choices=subproject_choices
+                            "subproject_choice",
+                            "Select Subproject to manage",
+                            choices=subproject_choices,
                         )
-                        subproject_choice = inquirer.prompt([subproject_prompt])['subproject_choice']
+                        subproject_choice = inquirer.prompt([subproject_prompt])[
+                            "subproject_choice"
+                        ]
                         if subproject_choice == "Exit":
                             break
                         elif subproject_choice == "Create a subproject":
                             # USE Subproject.generate_subproject to create a subproject here
                             # and add it to project_config.subprojects
                             spcreateprompt = inquirer.Text(
-                                'subproject_name',
-                                'Enter the name for the subproject'
+                                "subproject_name", "Enter the name for the subproject"
                             )
                             spname = inquirer.prompt([spcreateprompt])
                             if spname is not None:
-                                spname = spname['subproject_name']
+                                spname = spname["subproject_name"]
                                 if spname.strip() != "":
                                     os.makedirs(os.path.join(os.getcwd(), spname))
                                     project_config.subprojects.append(spname)
                                     Subproject.generate_subproject(
-                                        spname,
-                                        project_config.name,
-                                        project_config.author.name
+                                        spname, project_config.name, project_config.author.name
                                     )
                                     is_modified = True
                                 else:
-                                    print(f"{colorama.Fore.RED} NO NAME GIVEN. IGNORING.{colorama.Fore.RESET}")
+                                    print(
+                                        f"""{
+                                            colorama.Fore.RED
+                                        } NO NAME GIVEN. IGNORING.{
+                                            colorama.Fore.RESET
+                                        }"""
+                                    )
                                     break
                             else:
                                 break
                         else:
                             subproject_name = subproject_choice
-                            print(f"{colorama.Fore.BLUE}Switching to subproject {colorama.Fore.YELLOW}{subproject_choice}{colorama.Fore.RESET}")
-                            subproject_path = os.path.join(os.path.dirname(project_path), subproject_name)
+                            print(
+                                f"""{
+                                    colorama.Fore.BLUE
+                                }Switching to subproject {colorama.Fore.YELLOW}{
+                                    subproject_choice
+                                }{colorama.Fore.RESET}"""
+                            )
+                            subproject_path = os.path.join(
+                                os.path.dirname(project_path), subproject_name
+                            )
                             print(subproject_path)
                             if os.path.exists(subproject_path):
                                 sub_is_modified = Subproject.transfer_control(subproject_name)
                                 if sub_is_modified:
                                     is_modified = True
                             else:
-                                print(f"{colorama.Fore.RED}PATH DOES NOT EXIST{colorama.Fore.RESET}")
+                                print(
+                                    f"""{
+                                        colorama.Fore.RED
+                                    }PATH DOES NOT EXIST{
+                                        colorama.Fore.RESET
+                                    }"""
+                                )
                                 break
                 elif choice == "Modify Properties":
                     # Choice for Project Properties
@@ -249,14 +269,20 @@ class Project:
                         # Project.AUTHOR
                     ]:
                         keydictionary[CLI_VARS_PRETTYPRINT.format(var, project_dict[var])] = var
-                    keydictionary[CLI_VARS_PRETTYPRINT.format(Project.AUTHOR, project_dict[Project.AUTHOR][Author.NAME])] = Project.AUTHOR
+                    keydictionary[
+                        CLI_VARS_PRETTYPRINT.format(
+                            Project.AUTHOR, project_dict[Project.AUTHOR][Author.NAME]
+                        )
+                    ] = Project.AUTHOR
                     choice_list = inquirer.List(
-                        'project_key',
-                        message='Select the property to modify',
-                        choices=list(keydictionary.keys())
+                        "project_key",
+                        message="Select the property to modify",
+                        choices=list(keydictionary.keys()),
                     )
                     try:
-                        choice_property = keydictionary[inquirer.prompt([choice_list])['project_key']]
+                        choice_property = keydictionary[
+                            inquirer.prompt([choice_list])["project_key"]
+                        ]
                     except TypeError:
                         continue
                     if choice_property is None:
@@ -270,13 +296,13 @@ class Project:
                     elif choice_property == Project.TYPE_OF_PROJECT:
                         # let user select the type of project the user needs
                         type_choices_prompt = inquirer.List(
-                            'project_type',
-                            'Select the property type you want to switch to',
+                            "project_type",
+                            "Select the property type you want to switch to",
                             choices=[ptype.value for ptype in ProjectType],
-                            default=project_config.type
+                            default=project_config.type,
                         )
                         try:
-                            ptype_choice = inquirer.prompt([type_choices_prompt])['project_type']
+                            ptype_choice = inquirer.prompt([type_choices_prompt])["project_type"]
                             # project type changed here
                             project_config.type = ProjectType(ptype_choice)
                         except TypeError:
@@ -288,17 +314,23 @@ class Project:
                         author = project_config.author
                         author_dict = author.to_dict()
                         keydictionary = {}
-                        keydictionary[CLI_VARS_PRETTYPRINT.format(Author.NAME, author.name)] = Author.NAME
-                        keydictionary[CLI_VARS_PRETTYPRINT.format(Author.TYPE, author.type.value)] = Author.TYPE
+                        keydictionary[
+                            CLI_VARS_PRETTYPRINT.format(Author.NAME, author.name)
+                        ] = Author.NAME
+                        keydictionary[
+                            CLI_VARS_PRETTYPRINT.format(Author.TYPE, author.type.value)
+                        ] = Author.TYPE
                         # Select the author
                         author_choices_prompt = inquirer.List(
-                            'author_prop',
-                            'Select the property to modify',
-                            choices=list(keydictionary.keys())
+                            "author_prop",
+                            "Select the property to modify",
+                            choices=list(keydictionary.keys()),
                         )
                         answer = None
                         try:
-                            answer = keydictionary[inquirer.prompt([author_choices_prompt])['author_prop']]
+                            answer = keydictionary[
+                                inquirer.prompt([author_choices_prompt])["author_prop"]
+                            ]
                         except KeyError:
                             continue
                         print(answer)
@@ -310,12 +342,14 @@ class Project:
                                 author.name = answer
                         elif answer == Author.TYPE:
                             author_type_choices = inquirer.List(
-                                'author_type',
-                                'Select the type of author to be changed to',
-                                choices=[atype.value for atype in AuthorType]
+                                "author_type",
+                                "Select the type of author to be changed to",
+                                choices=[atype.value for atype in AuthorType],
                             )
                             try:
-                                new_author_type = AuthorType(inquirer.prompt([author_type_choices])['author_type'])
+                                new_author_type = AuthorType(
+                                    inquirer.prompt([author_type_choices])["author_type"]
+                                )
                             except KeyError:
                                 continue
                             author.type = new_author_type
@@ -327,12 +361,6 @@ class Project:
                         f"Configuration from "
                         f"{colorama.Fore.GREEN}{project_path}{colorama.Fore.RESET}"
                     )
-                    print(
-                        f"{colorama.Fore.BLUE}-- START OF CONFIGURATION --{colorama.Fore.RESET}"
-                    )
+                    print(f"{colorama.Fore.BLUE}-- START OF CONFIGURATION --{colorama.Fore.RESET}")
                     print(project_config.to_yaml())
-                    print(
-                        f"{colorama.Fore.BLUE}-- END OF CONFIGURATION --{colorama.Fore.RESET}"
-                    )
-# manage the project
-# Project.cli_manage()
+                    print(f"{colorama.Fore.BLUE}-- END OF CONFIGURATION --{colorama.Fore.RESET}")

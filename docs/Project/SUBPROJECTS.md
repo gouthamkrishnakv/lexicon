@@ -13,7 +13,7 @@
 ---
 ### A SAMPLE SUBPROJECT DESCRIPTION
 
-#### lexicon_sub.yaml
+#### `lexicon_sub.yaml`
 
 ```yaml
 Name: Assignment_01_Q01

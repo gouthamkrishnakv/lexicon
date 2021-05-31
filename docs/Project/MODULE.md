@@ -28,7 +28,6 @@ This is the smallest buildable object in Lexicon. In here, the source files incl
 
 ### A SAMPLE MODULE DESCRIPTION
 
-
 ```yaml
 and:
   # the file list
