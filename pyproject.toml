@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lexicon-gauthamkrishna9991"
-version = "0.1.1"
+version = "0.1.2"
 description = "A Verilog Project Management Tool"
 authors = ["Goutham Krishna K V <gauthamkrishna9991@live.com>"]
 readme = "docs/README.md"
