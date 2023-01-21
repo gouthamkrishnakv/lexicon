@@ -1,18 +1,18 @@
 #!/usr/bin/python3
 # This holds the information regarding the students for the project needed.
 
+import os
 from copy import deepcopy
 from enum import Enum
+from typing import Any, Dict, List
+
 import colorama
 import inquirer
-import os
-from typing import Dict, List, Any
 import yaml
 
-
-from lexicon.commonutils import CLI_VARS_PRETTYPRINT, change_text, check_is_modified
-
 from lexicon.author import Author, AuthorType
+from lexicon.commonutils import (CLI_VARS_PRETTYPRINT, change_text,
+                                 check_is_modified)
 from lexicon.subproject import Subproject
 
 

@@ -1,19 +1,43 @@
-[build-system]
-requires = [
-    "setuptools",
-    "wheel"
+[tool.poetry]
+name = "lexicon-gauthamkrishna9991"
+version = "0.1.1"
+description = "A Verilog Project Management Tool"
+authors = ["Goutham Krishna K V <gauthamkrishna9991@live.com>"]
+readme = "docs/README.md"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
 ]
 
-build-backend = "setuptools.build_meta"
+packages = [{ include = "lexicon", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+colorama = "0.4.4"
+PyYAML = "5.4.1"
+six = "1.15.0"
+wcwidth = "0.2.5"
+inquirer = "^3.1.2"
+blessed = "^1.19.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = {version = "^23.1a1", allow-prereleases = true}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# [build-system]
+# requires = ["setuptools", "wheel"]
+# build-backend = "setuptools.build_meta"
+
+[tool.poetry.scripts]
+lexicon = "lexicon.main:main"
 
 # black configuration
 [tool.black]
 line-length = 100
-target-version = [
-    'py37',
-    'py39'
-]
-
-# flake8 configuration
-[flake8]
-max-line-length = 100
+target-version = ['py37', 'py39']

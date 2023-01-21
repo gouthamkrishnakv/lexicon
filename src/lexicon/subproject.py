@@ -1,23 +1,20 @@
-import colorama
 import copy
-from datetime import datetime
 import errno
-import inquirer
 import os
 import pathlib
+from datetime import datetime
 from typing import Any, Dict, List
+
+import colorama
+import inquirer
 import yaml
 from yaml.error import YAMLError
 
-from lexicon.commonutils import CLI_VARS_PRETTYPRINT, change_text, check_is_modified
-from lexicon.makegenerators import (
-    append_lines,
-    gen_makefile_module_cmd,
-    MAKEFILE_PHONY,
-    PHONY_BUILD_ALL,
-    PHONY_CLEAN_ALL,
-)
-
+from lexicon.commonutils import (CLI_VARS_PRETTYPRINT, change_text,
+                                 check_is_modified)
+from lexicon.makegenerators import (MAKEFILE_PHONY, PHONY_BUILD_ALL,
+                                    PHONY_CLEAN_ALL, append_lines,
+                                    gen_makefile_module_cmd)
 from lexicon.module import Module
 
 

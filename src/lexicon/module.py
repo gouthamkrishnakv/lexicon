@@ -1,24 +1,19 @@
 import copy
-import colorama
 import glob
-import inquirer
 import os
 from typing import Any, Dict, List, Tuple
+
+import colorama
+import inquirer
 import yaml
 
-
-from lexicon.commonutils import change_text, check_is_modified, CLI_VARS_PRETTYPRINT
+from lexicon.commonutils import (CLI_VARS_PRETTYPRINT, change_text,
+                                 check_is_modified)
 from lexicon.filegenerators import generate_quickstart_template
-from lexicon.makegenerators import (
-    COMPILE_COMMAND,
-    CLEAN_COMMAND,
-    VIEWER_COMMAND,
-    append_lines,
-    gen_executable,
-    gen_inputvar_const,
-    gen_input_output,
-    gen_report_cmd,
-)
+from lexicon.makegenerators import (CLEAN_COMMAND, COMPILE_COMMAND,
+                                    VIEWER_COMMAND, append_lines,
+                                    gen_executable, gen_input_output,
+                                    gen_inputvar_const, gen_report_cmd)
 
 
 def remove_files_in_directory(files: List[str], extension: str = "*.v"):
