@@ -25,6 +25,7 @@ blessed = "^1.19.1"
 
 [tool.poetry.group.dev.dependencies]
 black = {version = "^23.1a1", allow-prereleases = true}
+twine = "^4.0.2"
 
 [build-system]
 requires = ["poetry-core"]
